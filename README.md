@@ -21,6 +21,8 @@ Pulse Mesh is a decentralized disaster-response communication simulation that en
 
 ## Demo
 
+### Demo Video Link: https://youtu.be/7w_uQdMqalw
+
 ### Network Simulation
 
 Each browser tab represents an independent device within the mesh network.
