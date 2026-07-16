@@ -1,72 +1,276 @@
-# Pulse Mesh — Offline Mesh Communication + AI Crisis Triage
+# Pulse Mesh
 
-Simulates a no-internet, no-cell-tower world: devices form a peer-to-peer mesh
-based on simulated radio range, and messages hop store-and-forward from device
-to device until they reach their target (or their TTL runs out and they're
-dropped). An optional AI feature compresses a burst of messages reaching one
-device into a compact "situation card" (status / location / needs).
+### Offline Mesh Networking with AI-Powered Crisis Triage
 
-## Run it
+Pulse Mesh is a decentralized disaster-response communication simulation that enables resilient communication when traditional infrastructure fails. Devices form a peer-to-peer mesh network, relay messages using store-and-forward routing, and leverage AI-powered crisis triage to help responders identify, prioritize, and coordinate emergency situations in real time.
+
+---
+
+## Features
+
+- 📡 **Offline Mesh Networking** using multi-hop communication
+- 🔄 **Store-and-Forward Routing** with Time-to-Live (TTL) based message propagation
+- 🤖 **AI-Powered Crisis Triage** that summarizes and prioritizes incoming situations
+- 🚨 **Automatic Urgency Classification** (Critical, Moderate, Low)
+- 🌐 **Interactive Network Visualization** using an HTML5 Canvas
+- 📱 **Multi-Device Simulation** where each browser tab represents a device
+- ⚡ **Real-Time Communication** powered by Socket.IO
+- 📋 **Situation Board** for responders to quickly assess ongoing incidents
+
+---
+
+## Demo
+
+### Network Simulation
+
+Each browser tab represents an independent device within the mesh network.
+
+Devices communicate only when they are within each other's radio range. Messages automatically hop through intermediate devices until they reach their destination.
+
+This simulates communication during disasters where cellular towers or internet connectivity are unavailable.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js v16 or later
+- npm
+
+### Installation
 
 ```bash
+git clone https://github.com/<your-username>/Pulse-Mesh.git
+cd Pulse-Mesh
 npm install
-export ANTHROPIC_API_KEY=your_key_here   # optional, only needed for the AI card feature
+```
+
+### Run the Application
+
+```bash
 npm start
 ```
 
-Open **http://localhost:3000** in a few browser tabs (or windows side by
-side) — each tab is one "device" once you click "Add Device to Mesh".
+Open the local address displayed in the terminal (typically `http://localhost:3000`).
 
-## How to demo it
+---
 
-1. Add 4-5 devices (e.g. Alice, Bob, Charlie, David, Emma) — they'll appear
-   as dots on the canvas with a translucent circle showing their range.
-2. Drag Alice and Emma far apart so they're **not** directly in range of each
-   other, but Bob/Charlie/David form a chain between them.
-3. Send a message from Alice to Emma. Watch the log panel: it queues, then
-   hops device to device, then delivers — even though Alice and Emma never
-   had a direct connection. This is the core "no infrastructure" story.
-4. Drag a middle node out of range mid-transit to show a message getting
-   dropped (TTL expires, no route) — good visual for judges to show realism.
-5. Send several messages *to* one device from different senders ("where are
-   you", "we need water", "is the shelter still open"), then hit **Compress
-   Recent Messages** for that device to show the AI situation card — this is
-   your "why AI, why now" moment in the pitch. The card is also ranked by
-   **urgency** (critical / moderate / low) and the board auto-sorts so the
-   most urgent cases float to the top with a colored left border — this is
-   what turns "communication" into "coordination."
+## How to Use
 
-## What's real engineering vs. what's AI-assisted
+### 1. Create Devices
 
-- **Yours to build on / extend:** the relay algorithm (`tick()` in
-  `server.js`), range/neighbor computation, TTL and dedup logic, the mesh
-  visualization, and the drag-to-simulate-movement UI. This is the core of
-  your submission and the part judges will look at for technical depth —
-  push on this (see "Next steps" below).
-- **AI-assisted, scoped narrowly:** a single `/api/compress` endpoint that
-  turns raw text into structured JSON. This keeps AI usage to one clearly
-  labeled feature rather than the whole app, which matters for the
-  "AI-generated content ≤ 30%" rule.
+Open multiple browser tabs.
 
-## Honest framing for judges
+Each tab acts as an independent mesh node.
 
-This demo simulates Bluetooth/Wi-Fi Direct range with on-screen pixel
-distance rather than real radios, so you can demo the mesh behavior on
-laptops without needing real phones or BLE hardware. Say this explicitly in
-your pitch — it's a legitimate simulation technique, not a shortcut you need
-to hide, and judges will respect the transparency more than they'll penalize
-the simplification.
+Create 4–5 devices such as:
 
-## Next steps if you have time
+- Alice
+- Bob
+- Charlie
+- David
+- Emma
 
-- **Priority messages:** add an `urgent` flag that jumps the relay queue
-  and is drawn in red.
-- **Real device-to-device transport:** swap the simulated range/socket
-  relay for actual `WebRTC` data channels between browser tabs on the same
-  LAN, or `Android Nearby Connections` / iOS `MultipeerConnectivity` if you
-  want a true mobile demo.
-- **Beacons:** a shared "board" of pinned locations (shelter, water, medical)
-  that also propagates through the mesh instead of just 1:1 messages.
-- **Battery-aware relay:** nodes below a battery threshold stop relaying
-  for others (only handle their own messages) — ties back into the
-  original "battery optimization" idea and adds a realistic constraint.
+Each device appears on the network canvas with a circular communication radius.
+
+---
+
+### 2. Simulate Network Conditions
+
+Drag devices around the canvas.
+
+- Devices inside each other's range communicate directly.
+- Devices outside direct range rely on intermediate relay nodes.
+
+This demonstrates decentralized communication without infrastructure.
+
+---
+
+### 3. Demonstrate Multi-Hop Routing
+
+Arrange the devices like this:
+
+```
+Alice ---- Bob ---- Charlie ---- David ---- Emma
+```
+
+Move Alice and Emma outside each other's communication range.
+
+Send a message from Alice to Emma.
+
+The message automatically travels through:
+
+```
+Alice
+   ↓
+Bob
+   ↓
+Charlie
+   ↓
+David
+   ↓
+Emma
+```
+
+showing store-and-forward routing through the mesh network.
+
+---
+
+### 4. Simulate Network Failure
+
+Move one relay device out of range while a message is travelling.
+
+The message will expire after exceeding its Time-to-Live (TTL), demonstrating realistic routing failures during disaster scenarios.
+
+---
+
+### 5. AI Crisis Triage
+
+Send several messages to a single device, for example:
+
+```
+"We need drinking water."
+
+"Someone is injured."
+
+"Where is the nearest shelter?"
+
+"We're safe."
+```
+
+Select the device and click:
+
+**Compress Recent Messages**
+
+Pulse Mesh generates an AI-powered incident summary including:
+
+| Field | Description |
+|--------|-------------|
+| Status | Safe, Needs Help, or Unknown |
+| Location | Estimated Sector (A1–D4) |
+| Needs | Water, Food, Medical, Shelter, etc. |
+| Urgency | Critical, Moderate, Low |
+| Summary | Concise overview of the situation |
+
+Situation cards automatically sort by urgency so responders immediately see the highest-priority cases.
+
+---
+
+# System Architecture
+
+| Component | Technology |
+|------------|------------|
+| Mesh Routing | Store-and-Forward with TTL |
+| Network Simulation | Distance-based Radio Range |
+| Real-Time Communication | Socket.IO |
+| Backend | Node.js + Express |
+| Visualization | HTML5 Canvas |
+| AI Triage | Local Offline Analysis (Optional AI Enhancement) |
+
+---
+
+## Tech Stack
+
+- Node.js
+- Express.js
+- Socket.IO
+- JavaScript
+- HTML5 Canvas
+- CSS3
+
+---
+
+## How It Works
+
+```
+             Device A
+                 │
+                 │
+           Store & Forward
+                 │
+      ┌──────────┴──────────┐
+      │                     │
+  Relay Node 1         Relay Node 2
+      │                     │
+      └──────────┬──────────┘
+                 │
+             Device B
+
+          ↓
+
+      Situation Board
+
+          ↓
+
+     AI Crisis Triage
+
+          ↓
+
+   Prioritized Incident Cards
+```
+
+---
+
+## AI Crisis Triage
+
+Instead of forcing responders to read dozens of individual messages, Pulse Mesh analyzes incoming communication and generates structured incident summaries.
+
+Each incident is automatically classified based on:
+
+- Medical emergencies
+- Food shortages
+- Water shortages
+- Shelter requests
+- Safety confirmations
+- Overall urgency
+
+This transforms raw communication into actionable coordination.
+
+---
+
+## Real-World Use Case
+
+Imagine a flood, earthquake, or hurricane where mobile towers and internet connectivity are unavailable.
+
+People nearby automatically form a mesh network.
+
+Messages travel between devices until they reach volunteers or emergency responders.
+
+Instead of manually reading hundreds of distress messages, responders receive AI-generated incident summaries ranked by urgency, allowing faster and more effective decision-making.
+
+---
+
+## Future Improvements
+
+- 📍 GPS-based live location sharing
+- 🗺️ Interactive rescue map using Leaflet
+- 🚑 AI-powered volunteer allocation
+- 📦 Resource inventory management
+- 🔋 Battery-aware relay optimization
+- 📢 Emergency broadcast messages
+- 📡 Native Bluetooth / Wi-Fi Direct communication
+- 🌍 Offline maps and shelter locations
+- 🤝 WebRTC peer-to-peer communication
+
+---
+
+## About This Demo
+
+Pulse Mesh uses a distance-based radio range simulation to emulate Bluetooth and Wi-Fi Direct communication.
+
+This allows the complete behavior of a decentralized mesh network—including multi-hop routing, relay failures, and AI-assisted coordination—to be demonstrated entirely on standard laptops without requiring specialized hardware.
+
+The AI crisis triage system functions offline using local analysis, ensuring the application remains fully operational even without internet connectivity.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Built For
+
+Disaster Response • Emergency Communication • Humanitarian Coordination • Hackathons
